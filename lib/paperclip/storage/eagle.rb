@@ -5,7 +5,7 @@ module Paperclip
 
       def self.extended base
         base.instance_eval do
-          @options.instance_variable_set("@url", "#{SERVER}/logos/:hash.:extension")
+          @options[:url] = "#{SERVER}/logos/:hash.:extension"
         end
       end
 
