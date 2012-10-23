@@ -11,12 +11,12 @@ module Paperclip
       end
 
       def exists?(style_name = default_style)
-        `curl --write-out %{http_code} --silent --output /dev/null #{url style_name}`
+        `curl --write-out %{http_code} --silent --output /dev/null '#{url(style_name)}'`
       end
 
       def flush_writes
         @queued_for_write.each do |style_name, file|
-           `curl -T "#{file.path}" "#{url style_name}"`
+           `curl -T '#{file.path}' '#{url(style_name)}'`
         end
         after_flush_writes # allows attachment to clean up temp files
         @queued_for_write = {}
@@ -27,4 +27,5 @@ module Paperclip
       end
     end
   end
+  TempfileFactory::ILLEGAL_FILENAME_CHARACTERS = /[~\']/
 end
