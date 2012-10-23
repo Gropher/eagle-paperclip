@@ -6,6 +6,7 @@ module Paperclip
       def self.extended base
         base.instance_eval do
           @options[:url] = "#{SERVER}/logos/:hash.:extension"
+          @options[:restricted_characters] = /[&$+,\"\/:;=?@<>\[\]\{\}\|\\\^~%# ]/
         end
       end
 
@@ -15,7 +16,7 @@ module Paperclip
 
       def flush_writes
         @queued_for_write.each do |style_name, file|
-           `curl -T #{file.path} #{url style_name}`
+           `curl -T "#{file.path}" "#{url style_name}"`
         end
         after_flush_writes # allows attachment to clean up temp files
         @queued_for_write = {}
