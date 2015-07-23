@@ -5,9 +5,15 @@ module Paperclip
 
       def self.extended base
         base.instance_eval do
-          @options[:url] = "#{SERVER}/:account_code/logos/:hash.:extension"
+          unless @options[:url].include?(":st_server")
+            @options[:url] = ":st_server/:account_code/logos/:hash.:extension"
+          end
           @options[:restricted_characters] = /[&$+,\"\/:;=?@<>\[\]\{\}\|\\\^~%# ]/
         end
+        
+        Paperclip.interpolates(:st_server) do |attachment, style|
+          SERVER
+        end unless Paperclip::Interpolations.respond_to? :st_server
       end
 
       def exists?(style_name = default_style)
