@@ -2,6 +2,7 @@ module Paperclip
   module Storage
     module Eagle
       SERVER = "http://st1.eaglecdn.com"
+      STORAGE_SERVERS = ["v23.dultonmedia.com", "v24.dultonmedia.com"]
 
       def self.extended base
         base.instance_eval do
@@ -29,6 +30,12 @@ module Paperclip
       end
 
       def flush_deletes
+        for path in @queued_for_delete do
+          STORAGE_SERVERS.each do |server|
+            log("deleting #{path} from #{server}")
+          end
+        end
+        
         @queued_for_delete = []
       end
     end
