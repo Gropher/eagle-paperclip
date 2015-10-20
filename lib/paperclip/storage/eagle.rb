@@ -35,7 +35,7 @@ module Paperclip
             delete_request_url = path.scan(/#{SERVER}.*/).first.sub SERVER, server
             log("deleting #{delete_request_url}")
             
-            `curl -XDELETE #{delete_request_url}`
+            `curl -XDELETE --max-time 3 #{delete_request_url}`
           end
         end
         
