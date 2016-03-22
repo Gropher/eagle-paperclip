@@ -20,7 +20,10 @@ module Paperclip
 
       def flush_writes
         @queued_for_write.each do |style_name, file|
-           `curl -T '#{file.path}' '#{url(style_name)}'`
+          upload_request_url = url(style_name)
+          log("upload #{upload_request_url}")
+          
+           `curl -T '#{file.path}' '#{upload_request_url}'`
         end
         after_flush_writes # allows attachment to clean up temp files
         @queued_for_write = {}
@@ -28,8 +31,10 @@ module Paperclip
 
       def flush_deletes
         for path in @queued_for_delete do
-          log("deleting #{path}")
-          `curl -XDELETE --max-time 3 #{path}`
+          delete_request_url = path.scan(/http:\/\/.*/).first
+          log("deleting #{delete_request_url}")
+            
+          `curl -XDELETE --max-time 3 #{delete_request_url}`
         end
         
         @queued_for_delete = []
