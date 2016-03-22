@@ -1,14 +1,11 @@
 module Paperclip
   module Storage
     module Eagle
-      SERVER = "http://static.eaglecdn.com"
-
       def self.extended base
         base.instance_eval do
           unless @options[:url].include?(":st_server")
             @options[:url] = ":st_server/:account_code/logos/:hash.:extension"
           end
-          @options[:st_server] = SERVER if @options[:st_server].nil?
           @options[:restricted_characters] = /[&$+,\"\/:;=?@<>\[\]\{\}\|\\\^~%# ]/
         end
         
