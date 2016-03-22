@@ -1,19 +1,19 @@
 module Paperclip
   module Storage
     module Eagle
-      SERVER = "http://st1.eaglecdn.com"
-      STORAGE_SERVERS = ["http://v23.dultonmedia.com", "http://v24.dultonmedia.com"]
+      SERVER = "http://static.eaglecdn.com"
 
       def self.extended base
         base.instance_eval do
           unless @options[:url].include?(":st_server")
             @options[:url] = ":st_server/:account_code/logos/:hash.:extension"
           end
+          @options[:st_server] = SERVER if @options[:st_server].nil?
           @options[:restricted_characters] = /[&$+,\"\/:;=?@<>\[\]\{\}\|\\\^~%# ]/
         end
         
         Paperclip.interpolates(:st_server) do |attachment, style|
-          SERVER
+          attachment.options[:st_server]
         end unless Paperclip::Interpolations.respond_to? :st_server
       end
 
@@ -31,12 +31,8 @@ module Paperclip
 
       def flush_deletes
         for path in @queued_for_delete do
-          STORAGE_SERVERS.each do |server|
-            delete_request_url = path.scan(/#{SERVER}.*/).first.sub SERVER, server
-            log("deleting #{delete_request_url}")
-            
-            `curl -XDELETE --max-time 3 #{delete_request_url}`
-          end
+          log("deleting #{path}")
+          `curl -XDELETE --max-time 3 #{path}`
         end
         
         @queued_for_delete = []
