@@ -7,10 +7,10 @@ Paperclip.interpolates('account_code') do |attachment, style|
 end
 
 Paperclip.interpolates('filename_1st_char') do |attachment, style|
-  File.basename(attachment.original_filename, ".*".freeze)[0] || "empty"
+  attachment.hash_key(style)[0]
 end
 
 
 Paperclip.interpolates('filename_2nd_char') do |attachment, style|
-  File.basename(attachment.original_filename, ".*".freeze)[1] || "empty"
+  attachment.hash_key(style)[1]
 end
