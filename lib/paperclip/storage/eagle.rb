@@ -4,7 +4,7 @@ module Paperclip
       def self.extended base
         base.instance_eval do
           unless @options[:url].include?(":st_server")
-            @options[:url] = ":st_server/:account_code/logos/:hash.:extension"
+            @options[:url] = ":st_server/:account_code/logos/:filename_1st_char/:filename_2nd_char/:hash.:extension"
           end
           @options[:restricted_characters] = /[&$+,\"\/:;=?@<>\[\]\{\}\|\\\^~%# ]/
         end
