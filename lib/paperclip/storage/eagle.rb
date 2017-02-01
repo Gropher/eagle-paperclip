@@ -21,7 +21,7 @@ module Paperclip
       def flush_writes
         @queued_for_write.each do |style_name, file|
           upload_request_url = url(style_name)
-          log("upload #{upload_request_url}")
+          log("upload #{file.path} to #{upload_request_url}")
           
           log `curl -T '#{file.path}' '#{upload_request_url}'`
         end
